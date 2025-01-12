@@ -21,7 +21,7 @@ export function ProductGrid({ products }: ProductGridProps) {
   return (
     <div>
       <div className="flex flex-col space-y-4 mb-8">
-        <div className="flex justify-center space-x-4">
+        <div className="flex flex-wrap justify-center gap-4">
           <Button
             variant={filter === null ? "default" : "outline"}
             onClick={() => setFilter(null)}

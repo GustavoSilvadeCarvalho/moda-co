@@ -16,6 +16,7 @@ export function Footer() {
                 <li><Link href="/" className="text-foreground hover:text-primary">Home</Link></li>
                 <li><Link href="/#about" className="text-foreground hover:text-primary">Sobre</Link></li>
                 <li><Link href="/#contact" className="text-foreground hover:text-primary">Contato</Link></li>
+                <li><Link href="/products" className="text-foreground hover:text-primary">Produtos</Link></li>
               </ul>
             </div>
             <div className="w-full md:w-1/4 mb-6 md:mb-0">

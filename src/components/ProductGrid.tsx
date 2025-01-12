@@ -8,9 +8,11 @@ import { Input } from "@/components/ui/input"
 
 interface ProductGridProps {
   products: Product[]
+  isSticky?: boolean
+  limit?: number
 }
 
-export function ProductGrid({ products }: ProductGridProps) {
+export function ProductGrid({ products, isSticky = false, limit }: ProductGridProps) {
   const [filter, setFilter] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState('')
 
@@ -18,9 +20,15 @@ export function ProductGrid({ products }: ProductGridProps) {
     .filter(product => !filter || product.category.toLowerCase() === filter.toLowerCase())
     .filter(product => product.name.toLowerCase().includes(searchTerm.toLowerCase()))
 
+  const displayedProducts = limit ? filteredProducts.slice(0, limit) : filteredProducts
+
   return (
     <div>
-      <div className="flex flex-col space-y-4 mb-8">
+      <div
+        className={`flex flex-col space-y-4 mb-8 ${
+          isSticky ? "sticky top-16 bg-white z-10 py-4" : ""
+        }`}
+      >
         <div className="flex flex-wrap justify-center gap-4">
           <Button
             variant={filter === null ? "default" : "outline"}
@@ -58,7 +66,7 @@ export function ProductGrid({ products }: ProductGridProps) {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {filteredProducts.map((product) => (
+        {displayedProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>

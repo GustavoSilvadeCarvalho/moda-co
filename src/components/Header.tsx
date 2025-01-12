@@ -35,6 +35,7 @@ export function Header() {
             <li><Link href="/" className="text-foreground hover:text-primary">Home</Link></li>
             <li><Link href="/#about" className="text-foreground hover:text-primary">Sobre</Link></li>
             <li><Link href="/#contact" className="text-foreground hover:text-primary">Contato</Link></li>
+            <li><Link href='/products'>Produtos</Link></li>
           </ul>
         </nav>
         <div className="flex items-center space-x-4">

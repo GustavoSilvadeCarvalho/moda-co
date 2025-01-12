@@ -27,9 +27,8 @@ export function ProductGrid({ products, isSticky = false, limit, hideFilters = f
     <div>
       {!hideFilters && (
         <div
-          className={`flex flex-col space-y-4 mb-8 ${
-            isSticky ? "sticky top-16 bg-white z-10 py-4" : ""
-          }`}
+          className={`flex flex-col space-y-4 mb-8 ${isSticky ? "sticky top-16 z-10 py-4" : ""
+            }`}
         >
           <div className="flex flex-wrap justify-center gap-4">
             <Button

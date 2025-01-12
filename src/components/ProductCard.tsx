@@ -17,14 +17,14 @@ export function ProductCard({ product }: ProductCardProps) {
         <Image
           src={product.image}
           alt={product.name}
-          width={200}
-          height={200}
+          width={360}
+          height={360}
           className="w-full h-48 object-cover"
         />
       </CardContent>
       <CardFooter className="flex flex-col items-start p-4">
         <h3 className="text-lg font-semibold">{product.name}</h3>
-        <p className="text-gray-600">R${product.price.toFixed(2)}</p>
+        <p className="text-gray-600 dark:text-gray-400">R${product.price.toFixed(2)}</p>
         <Button className="mt-2 w-full" onClick={() => addToCart(product)}>Adionar ao carrinho</Button>
       </CardFooter>
     </Card>

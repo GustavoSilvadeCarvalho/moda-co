@@ -5,6 +5,7 @@ import { Product } from '../data/products'
 import { ProductCard } from './ProductCard'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import Link from 'next/link'
 
 interface ProductGridProps {
   products: Product[]
@@ -72,6 +73,10 @@ export function ProductGrid({ products, isSticky = false, limit, hideFilters = f
         {displayedProducts.map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
+      </div>
+
+      <div className='flex justify-center mt-8'>
+        <Button size="lg" className="text-lg px-8 py-4"><Link href="/products">Confira</Link></Button>
       </div>
 
       {displayedProducts.length === 0 && (

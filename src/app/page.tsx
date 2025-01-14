@@ -5,6 +5,7 @@ import { About } from '../components/About'
 import { Contact } from '../components/Contact'
 import { Footer } from '../components/Footer'
 import { products } from '../data/products'
+import { BenefitsGrid } from '@/components/BenefitsGrid'
 
 export default function Home() {
   return (
@@ -12,9 +13,10 @@ export default function Home() {
       <Header />
       <Hero />
       <main className="flex-grow">
+        <BenefitsGrid />
         <section className="container mx-auto px-4 py-16">
           <h2 className="text-3xl font-bold mb-8 text-center">
-          Produtos em destaque</h2>
+            Produtos em destaque</h2>
           <ProductGrid products={products} limit={4} hideFilters={true} />
         </section>
         <About />

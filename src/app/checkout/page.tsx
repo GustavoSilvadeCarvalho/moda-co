@@ -230,35 +230,7 @@ export default function Checkout() {
               </div>
               <div className="mt-4 flex justify-end">
                 <Link href="/cart">
-                <Button
-                    variant="outline"
-                    onClick={async () => {
-                      try {
-                        // Envia a requisição para a rota de envio de e-mail
-                        const response = await fetch('/api/send-email', {
-                          method: 'POST',
-                          headers: { 'Content-Type': 'application/json' },
-                          body: JSON.stringify({
-                            to: 'gustacar2008@gmail.com', // E-mail do destinatário
-                            name: 'Gustavo', // Nome do destinatário
-                          }),
-                        });
-
-                        if (!response.ok) {
-                          throw new Error('Erro ao enviar o e-mail');
-                        }
-
-                        console.log('E-mail enviado com sucesso!');
-                      } catch (error) {
-                        console.error('Erro ao enviar o e-mail:', error);
-                      }
-
-                      // Fecha o modal
-                      setShowReceipt(false);
-                    }}
-                    >
-                    Fechar
-                  </Button>
+                  <Button variant="outline" onClick={() => setShowReceipt(false)}>Fechar</Button>
                 </Link>
               </div>
             </div>

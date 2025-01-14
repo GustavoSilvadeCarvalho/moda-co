@@ -1,9 +1,9 @@
 import { Card, CardContent } from "@/components/ui/card";
 
 interface DiscountCardProps {
-  peca: String;
-  porcentagem: String;
-  text: String;
+  peca: string;
+  porcentagem: string;
+  text: string;
 }
 
 export function DiscountCard({ peca, porcentagem, text }: DiscountCardProps) {

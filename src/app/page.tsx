@@ -6,6 +6,7 @@ import { Contact } from '../components/Contact'
 import { Footer } from '../components/Footer'
 import { products } from '../data/products'
 import { BenefitsGrid } from '@/components/BenefitsGrid'
+import { DiscountGrid } from '@/components/DiscountGrid'
 
 export default function Home() {
   return (
@@ -14,10 +15,19 @@ export default function Home() {
       <Hero />
       <main className="flex-grow">
         <BenefitsGrid />
-        <section className="container mx-auto px-4 py-16">
+        <section className="container mx-auto px-4 pt-16">
           <h2 className="text-3xl font-bold mb-8 text-center">
             Produtos em destaque</h2>
           <ProductGrid products={products} limit={4} hideFilters={true} />
+        </section>
+        <section className='container mx-auto px-4 pt-16'>
+          <h2 className='text-3xl font-bold mb-8 text-center'>Desconto progressivo</h2>
+          <DiscountGrid />
+        </section>
+        <section className="container mx-auto px-4 pt-16">
+          <h2 className="text-3xl font-bold mb-8 text-center">
+            Coleção de inverno</h2>
+          <ProductGrid products={products.slice(4, 8)} limit={4} hideFilters={true} />
         </section>
         <About />
         <Contact />

@@ -6,6 +6,7 @@ import { Footer } from '../../components/Footer'
 import { Button } from "@/components/ui/button"
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
+import Link from 'next/link'
 
 export default function Checkout() {
   const { cart, clearCart } = useCart()
@@ -29,12 +30,31 @@ export default function Checkout() {
 
   const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
 
+  const formatCardNumber = (value: string) => {
+    const cleaned = value.replace(/[^0-9]/g, '')
+    const parts = []
+
+    for (let i = 0; i < cleaned.length; i += 4) {
+      parts.push(cleaned.slice(i, i + 4))
+    }
+
+    return parts.join('-')
+  }
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+
+    if (name === 'cardNumber') {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: formatCardNumber(value),
+      }))
+    } else {
+      setFormData((prev) => ({
+        ...prev,
+        [name]: value,
+      }))
+    }
   }
 
   const handlePayment = async () => {
@@ -44,7 +64,7 @@ export default function Checkout() {
     const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' }
     const paymentDate = today.toLocaleDateString('pt-BR', options)
 
-    const cardLastDigits = Math.floor(Math.random() * 10000).toString().padStart(4, '0')
+    const cardLastDigits = formData.cardNumber.replace(/[^0-9]/g, '').slice(-4)
 
     const paymentMethod = 'Cartão de Crédito'
     const amountPaid = total
@@ -64,13 +84,19 @@ export default function Checkout() {
 
   const validateForm = () => {
     const { cardName, cardNumber, expirationDate, cvv } = formData
-    const isValid = cardName !== '' && cardNumber !== '' && expirationDate !== '' && cvv !== ''
+    const isValid = cardName !== '' && cardNumber.replace(/[^0-9]/g, '').length === 16 && expirationDate.length === 5 && cvv.length === 3
     setIsFormValid(isValid)
   }
 
   useEffect(() => {
     validateForm()
   }, [formData])
+
+  const formatExpirationDate = (value: string) => {
+    const cleaned = value.replace(/[^0-9]/g, '')
+    if (cleaned.length <= 2) return cleaned
+    return cleaned.slice(0, 2) + '/' + cleaned.slice(2, 4)
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -116,6 +142,11 @@ export default function Checkout() {
                     className="w-full p-2 border border-gray-300 rounded-md" 
                     value={formData.cardNumber}
                     onChange={handleInputChange}
+                    onInput={(e) => {
+                      e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "").slice(0, 16);
+                    }}
+                    maxLength={19}
+                    placeholder="0000-0000-0000-0000"
                   />
                 </div>
                 <div>
@@ -125,22 +156,32 @@ export default function Checkout() {
                     name="expirationDate" 
                     className="w-full p-2 border border-gray-300 rounded-md" 
                     value={formData.expirationDate}
-                    onChange={handleInputChange}
+                    onChange={(e) => setFormData({ ...formData, expirationDate: formatExpirationDate(e.target.value) })}
+                    maxLength={5}
+                    placeholder='00/00'
                   />
                 </div>
                 <div>
                   <label className="block text-gray-700">CVV</label>
                   <input 
-                    type="text" 
+                    type="text"
                     name="cvv" 
                     className="w-full p-2 border border-gray-300 rounded-md" 
                     value={formData.cvv}
                     onChange={handleInputChange}
+                    onInput={(e) => {
+                      e.currentTarget.value = e.currentTarget.value.replace(/[^0-9]/g, "").slice(0, 3);
+                    }}
+                    maxLength={3}
+                    placeholder='000'
                   />
                 </div>
                 <Button 
                   className="mt-4 w-full" 
-                  onClick={handlePayment}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handlePayment();
+                  }}
                   disabled={!isFormValid}
                 >
                   Pagar
@@ -153,11 +194,12 @@ export default function Checkout() {
 
       {showReceipt && (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center">
-          <div className="bg-white p-8 rounded-md shadow-lg max-w-lg w-full">
+          <div className="bg-white dark:bg-black p-8 rounded-md shadow-lg max-w-lg w-full">
             <div className='flex flex-col items-center w-full'>
               <div className='flex flex-col gap-5 items-center mb-16'>
                 <Image 
                   src="/verificar.png"
+                  className='dark:invert'
                   alt='icone de confirmado'
                   width={100}
                   height={100}
@@ -178,6 +220,7 @@ export default function Checkout() {
                     <Image
                       src="/visa.svg"
                       alt='Icone da visa'
+                      className="dark:invert"
                       width={45}
                       height={25}
                     />
@@ -186,7 +229,37 @@ export default function Checkout() {
                 </div>
               </div>
               <div className="mt-4 flex justify-end">
-              <Button variant="outline" onClick={() => setShowReceipt(false)}>Fechar</Button>
+                <Link href="/cart">
+                <Button
+                    variant="outline"
+                    onClick={async () => {
+                      try {
+                        // Envia a requisição para a rota de envio de e-mail
+                        const response = await fetch('/api/send-email', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify({
+                            to: 'gustacar2008@gmail.com', // E-mail do destinatário
+                            name: 'Gustavo', // Nome do destinatário
+                          }),
+                        });
+
+                        if (!response.ok) {
+                          throw new Error('Erro ao enviar o e-mail');
+                        }
+
+                        console.log('E-mail enviado com sucesso!');
+                      } catch (error) {
+                        console.error('Erro ao enviar o e-mail:', error);
+                      }
+
+                      // Fecha o modal
+                      setShowReceipt(false);
+                    }}
+                    >
+                    Fechar
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

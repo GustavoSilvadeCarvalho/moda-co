@@ -1,10 +1,10 @@
 import { Card, CardContent } from "@/components/ui/card"
-import { LucideIcon } from "lucide-react" // Importa o tipo para ícones
+import { LucideIcon } from "lucide-react"
 import { ReactNode } from "react"
 
 interface BenefitCardProps {
-    icon: LucideIcon; // Ícone dinâmico
-    text: ReactNode;  // Texto dinâmico
+    icon: LucideIcon;
+    text: ReactNode;
 }
 
 export function BenefitsCard({ icon: Icon, text }: BenefitCardProps) {
